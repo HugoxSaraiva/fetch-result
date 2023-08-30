@@ -3,7 +3,7 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   testRegex: "/tests/.*.test.ts",
-  coveragePathIgnorePatterns: ["/node_modules/", "/tests/", "src/index.ts"],
+  coveragePathIgnorePatterns: ["/node_modules/", "/tests/", "/exmaples/"],
   collectCoverage: true,
   coverageThreshold: {
     "./src/**/*.ts": {

@@ -1,11 +1,9 @@
 // Result<unknown, HTTPResponseError | JSONResponseParseError | TypeError>
 
 import { Response } from "node-fetch"
-import {
-  HTTPResponseError,
-  JSONResponseParseError,
-  ResponseResult,
-} from "../src/responseResult"
+import { FetchResponse } from "../src/fetchResponse"
+import { HTTPResponseError } from "../src/HTTPResponseError"
+import { JSONResponseParseError } from "../src/JSONParseError"
 
 const jsonData = {
   foo: 1,
@@ -20,29 +18,29 @@ const nonJsonData = "foo"
 
 const stringData = "foo"
 
-describe("ResponseResult json test suite", () => {
+describe("FetchResponse json test suite", () => {
   it("JSON Response should work", async () => {
     const response = new Response(jsonString, { status: 200 })
-    const result = await new ResponseResult(response).json()
+    const result = await new FetchResponse(response).json()
     expect(result.unwrap()).toStrictEqual(jsonData)
   })
 
-  it("ResponseResult json() should return HTTPResponseError when response is not ok", async () => {
+  it("FetchResponse json() should return HTTPResponseError when response is not ok", async () => {
     const response = new Response(jsonString, { status: 400 })
-    const result = await new ResponseResult(response).json()
+    const result = await new FetchResponse(response).json()
     expect(result.val).toBeInstanceOf(HTTPResponseError)
   })
 
-  it("ResponseResult json() should return JSONResponseParseError when response body is not a json", async () => {
+  it("FetchResponse json() should return JSONResponseParseError when response body is not a json", async () => {
     const response = new Response(nonJsonData, { status: 200 })
-    const result = await new ResponseResult(response).json()
+    const result = await new FetchResponse(response).json()
     expect(result.err).toBe(true)
     expect(result.val).toBeInstanceOf(JSONResponseParseError)
   })
 
   it("Trying to parse JSON twice should fail", async () => {
     const response = new Response(jsonString, { status: 200 })
-    const responseResult = new ResponseResult(response)
+    const responseResult = new FetchResponse(response)
     await responseResult.json()
     const result = await responseResult.json()
     expect(result.err).toBe(true)
@@ -50,22 +48,22 @@ describe("ResponseResult json test suite", () => {
   })
 })
 
-describe("ResponseResult text test suite", () => {
+describe("FetchResponse text test suite", () => {
   it("Text Response should work", async () => {
     const response = new Response(stringData, { status: 200 })
-    const result = await new ResponseResult(response).text()
+    const result = await new FetchResponse(response).text()
     expect(result.unwrap()).toEqual(stringData)
   })
 
-  it("ResponseResult text() should return HTTPResponseError when response is not ok", async () => {
+  it("FetchResponse text() should return HTTPResponseError when response is not ok", async () => {
     const response = new Response(stringData, { status: 400 })
-    const result = await new ResponseResult(response).text()
+    const result = await new FetchResponse(response).text()
     expect(result.val).toBeInstanceOf(HTTPResponseError)
   })
 
   it("Trying to parse text twice should fail", async () => {
     const response = new Response(stringData, { status: 200 })
-    const responseResult = new ResponseResult(response)
+    const responseResult = new FetchResponse(response)
     await responseResult.text()
     const result = await responseResult.text()
     expect(result.err).toBe(true)

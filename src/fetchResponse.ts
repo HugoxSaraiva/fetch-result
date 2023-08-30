@@ -1,26 +1,16 @@
 import { Response } from "node-fetch"
 import { Err, Ok, Result } from "ts-results"
+import { HTTPResponseError } from "./HTTPResponseError"
+import { JSONResponseParseError } from "./JSONParseError"
 
-export class HTTPResponseError extends Error {
-  constructor(readonly response: Response) {
-    super(`HTTP Error Response: ${response.status} ${response.statusText}`)
-    this.response = response
-  }
-}
+export type JsonError = HTTPResponseError | JSONResponseParseError | TypeError
 
-export class JSONResponseParseError extends Error {
-  constructor(readonly response: Response) {
-    super(`JSON Parse Error: ${response.status} ${response.statusText}`)
-    this.response = response
-  }
-}
+export type TextError = HTTPResponseError | TypeError
 
-export class ResponseResult {
+export class FetchResponse {
   constructor(public readonly response: Response) {}
 
-  json = async (): Promise<
-    Result<unknown, HTTPResponseError | JSONResponseParseError | TypeError>
-  > => {
+  json = async (): Promise<Result<unknown, JsonError>> => {
     if (!this.response.ok) {
       return Err(new HTTPResponseError(this.response))
     }
@@ -40,7 +30,7 @@ export class ResponseResult {
     }
   }
 
-  text = async (): Promise<Result<string, HTTPResponseError | TypeError>> => {
+  text = async (): Promise<Result<string, TextError>> => {
     if (!this.response.ok) {
       return Err(new HTTPResponseError(this.response))
     }

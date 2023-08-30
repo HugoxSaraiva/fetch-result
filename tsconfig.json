@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "module": "Node16",
-    "moduleResolution": "node16",
-    "newLine": "lf",
+    "declaration": true,
     "isolatedModules": true,
+    "moduleResolution": "Node16",
+    "module": "Node16",
+    "target": "es2020",
+    "newLine": "lf",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
