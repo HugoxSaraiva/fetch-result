@@ -1,21 +1,13 @@
-import { Result } from "ts-results"
-import { FetchResultError, FetchResultOutput } from "./fetchResultWrapper"
-import { JsonError } from "./fetchResponse"
+import { Ok, Result } from "ts-results"
+import { ResponseResult } from "./responseResult"
 
-type ParseJsonFn = (
-  fetchResult: FetchResultOutput
-) => Promise<Result<unknown, JsonError | FetchResultError>>
-
-export const parseJson: ParseJsonFn = async (
-  fetchResult: FetchResultOutput
-) => {
-  if (fetchResult.err) {
-    return fetchResult
+export async function parseJson<T = unknown, E = unknown>(
+  fetchResponseResult: Result<ResponseResult, E>
+) {
+  if (fetchResponseResult.err) {
+    return fetchResponseResult
   }
-  const responseResult = fetchResult.val
+  const responseResult = fetchResponseResult.val
   const parseResult = await responseResult.json()
-  if (parseResult.err) {
-    return parseResult
-  }
-  return parseResult
+  return parseResult.map((result)=> result as Ok<T>)
 }

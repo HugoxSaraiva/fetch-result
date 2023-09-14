@@ -1,21 +1,12 @@
 import { Result } from "ts-results"
-import { FetchResultError, FetchResultOutput } from "./fetchResultWrapper"
-import { TextError } from "./fetchResponse"
+import { ResponseResult } from "./responseResult"
 
-type ParseTextFn = (
-  fetchResult: FetchResultOutput
-) => Promise<Result<unknown, TextError | FetchResultError>>
-
-export const parseText: ParseTextFn = async (
-  fetchResult: FetchResultOutput
-) => {
-  if (fetchResult.err) {
-    return fetchResult
+export async function parseText<E = unknown>(
+  fetchResponseResult: Result<ResponseResult, E>
+) {
+  if (fetchResponseResult.err) {
+    return fetchResponseResult
   }
-  const responseResult = fetchResult.val
-  const parseResult = await responseResult.text()
-  if (parseResult.err) {
-    return parseResult
-  }
-  return parseResult
+  const responseResult = fetchResponseResult.val
+  return await responseResult.text()
 }

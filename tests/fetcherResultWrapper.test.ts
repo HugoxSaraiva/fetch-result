@@ -1,6 +1,6 @@
 import { Ok } from "ts-results"
 import { fetchResultWrapper } from "../src/fetchResultWrapper"
-import { FetchResponse } from "../src/fetchResponse"
+import { ResponseResult } from "../src/responseResult"
 import { Fetcher } from "../src/fetcher"
 import { FetchError, Response } from "node-fetch"
 import { AbortError } from "../src/abortError"
@@ -20,12 +20,12 @@ const abortFetcher: Fetcher = async () => {
 }
 
 describe("FetcherResultWrapper test suite", () => {
-  it("Should return Ok(FetchResponse) when fetcher returns a response", async () => {
+  it("Should return Ok(ResponseResult) when fetcher returns a response", async () => {
     const fetchResult = fetchResultWrapper(okFetcher)
     const result = await fetchResult("")
     expect(result).toBeInstanceOf(Ok)
-    expect(result.val).toBeInstanceOf(FetchResponse)
-    expect((result.val as FetchResponse).response).toEqual(okResponse)
+    expect(result.val).toBeInstanceOf(ResponseResult)
+    expect((result.val as ResponseResult).response).toEqual(okResponse)
   })
 
   it("Should return Err(FetchError) when fetcher throws a FetchError", async () => {

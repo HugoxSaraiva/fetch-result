@@ -1,6 +1,5 @@
 /* istanbul ignore file */
-import { FetchError, RequestInfo, Response, RequestInit } from "node-fetch"
-export { FetchError }
+import { RequestInfo, Response, RequestInit } from "node-fetch"
 
 export type FetcherInput = [url: URL | RequestInfo, init?: RequestInit]
 export type FetcherOutput = Response

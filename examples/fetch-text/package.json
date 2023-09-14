@@ -12,6 +12,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "fetch-result": "file:../..",
     "ts-node": "^10.9.1"
   }
 }
